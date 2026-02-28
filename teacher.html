@@ -1,22 +1,39 @@
-<script>
-  const VALID_SECONDS = 3;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
 
-  function baseURL() {
-    // works on GitHub Pages (keeps repo name)
-    return location.href.split("/teacher.html")[0];
-  }
+<body style="text-align:center; font-family:Arial, sans-serif;">
+  <h1>QR Attendance</h1>
+  <p>Scan the QR code within <b>3 seconds</b></p>
 
-  function updateQR() {
-    const issuedAt = Math.floor(Date.now() / 1000);
-    const data = `${baseURL()}/scan.html?ts=${issuedAt}`;
+  <img id="qr" width="300" alt="QR Code" />
 
-    const qrURL =
-      "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
-      encodeURIComponent(data);
+  <script>
+    const VALID_SECONDS = 3;
 
-    document.getElementById("qr").src = qrURL;
-  }
+    // GitHub Pages safe base URL (keeps /Attendance-System/)
+    function baseURL() {
+      return location.href.replace(/teacher\.html.*$/, "");
+    }
 
-  updateQR();
-  setInterval(updateQR, VALID_SECONDS * 1000);
-</script>
+    function updateQR() {
+      const issuedAt = Math.floor(Date.now() / 1000);
+      const scanURL = `${baseURL()}scan.html?ts=${issuedAt}`;
+
+      const qrAPI =
+        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
+        encodeURIComponent(scanURL);
+
+      document.getElementById("qr").src =
+        qrAPI + "&t=" + Date.now(); // prevent caching
+    }
+
+    updateQR();
+    setInterval(updateQR, VALID_SECONDS * 1000);
+  </script>
+</body>
+</html>
