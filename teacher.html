@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR Attendance</title>
+</head>
+<body style="text-align:center; font-family:sans-serif;">
+  <h1>QR Attendance</h1>
+  <img id="qr" width="300">
+
+  <script>
+    const VALID_SECONDS = 3;
+
+    function updateQR() {
+      const issuedAt = Math.floor(Date.now() / 1000);
+      const data = `${location.origin}/scan.html?ts=${issuedAt}`;
+
+      const qrURL =
+        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
+        encodeURIComponent(data);
+
+      document.getElementById("qr").src = qrURL;
+    }
+
+    updateQR();
+    setInterval(updateQR, VALID_SECONDS * 1000);
+  </script>
+</body>
+</html>
