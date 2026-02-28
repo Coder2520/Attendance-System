@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance Check-in</title>
+</head>
+<body style="font-family:sans-serif; padding:20px;">
+  <h2>Attendance Check-in</h2>
+
+  <div id="status"></div>
+
+  <input id="reg" placeholder="Registration Number">
+  <br><br>
+  <button id="submit">Mark Attendance</button>
+
+  <script>
+    const VALID_SECONDS = 3;
+
+    const params = new URLSearchParams(window.location.search);
+    const issuedAt = parseInt(params.get("ts"), 10);
+    const now = Math.floor(Date.now() / 1000);
+
+    const statusDiv = document.getElementById("status");
+
+    if (!issuedAt || now - issuedAt > VALID_SECONDS) {
+      statusDiv.innerHTML = "<b style='color:red'>QR expired</b>";
+      document.getElementById("submit").disabled = true;
+    } else {
+      statusDiv.innerHTML = "<b style='color:green'>QR valid</b>";
+    }
+
+    document.getElementById("submit").onclick = () => {
+      const reg = document.getElementById("reg").value.trim();
+      if (!reg) {
+        alert("Enter registration number");
+        return;
+      }
+
+      console.log({
+        reg_no: reg,
+        scanned_at: issuedAt
+      });
+
+      alert("Attendance marked (JS-only demo)");
+    };
+  </script>
+</body>
+</html>
